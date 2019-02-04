@@ -21,12 +21,14 @@ import java.util.List;
 class JoltSample {
    
     public static void main(String[] args) throws IOException {
-
-        // final int PRETTY_PRINT_INDENTATION = 4;
+        
+        // Only really need the pretty printing to review JSON manually.
+        final int PRETTY_PRINT_INDENTATION = 4;
 
         String XMLString = "";
         String JSONString = "";
         String JSONOutput = "";
+        JSONObject xmlJSONObj = new JSONObject();
 
         // Read in the XML File.
         File file = new File("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.xml");
@@ -41,26 +43,20 @@ class JoltSample {
 
         // Convert XML to JSON.
         try {
-            JSONObject xmlJSONObj = XML.toJSONObject(XMLString);
-            //System.out.println(xmlJSONObj);
-            //JSONString = xmlJSONObj.toString(PRETTY_PRINT_INDENTATION);
-            JSONString = xmlJSONObj.toString();
+            xmlJSONObj = XML.toJSONObject(XMLString);
+            JSONString = xmlJSONObj.toString(PRETTY_PRINT_INDENTATION);
         } catch (JSONException je) {
             System.out.print(je.toString());
         }
 
-        // How to access the test artifacts, i.e. JSON files
-        //  JsonUtils.classpathToList : assumes you put the test artifacts in your class path
-        //  JsonUtils.filepathToList : you can use an absolute path to specify the files
-
-        List chainrSpecJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/spec.json" );
-        
-        //System.out.print(chainrSpecJSON);
-
+        // Get the list of rules.
+        List chainrSpecJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/specs/spec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
 
-        Object inputJSON = JsonUtils.filepathToObject( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json" );
-        //System.out.print((JSONString));
+
+        // Can save a little time by reading from the JSON conversion directly.
+        //Object inputJSON = JsonUtils.filepathToObject( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json" );
+        Object inputJSON = JsonUtils.jsonToObject( JSONString );
 
         Object transformedOutput = chainr.transform( inputJSON );
         JSONOutput = JsonUtils.toJsonString( transformedOutput );

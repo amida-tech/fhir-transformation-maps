@@ -1,0 +1,16 @@
+[
+    {
+        "operation": "shift",
+        "spec": {
+            "ClinicalDocument": {
+                "recordTarget": {
+                    "patientRole": {
+                        "patient": {
+                            "maritalStatusCode": "patient.maritalStatus"
+                        }
+                    }
+                }
+            }
+        }
+    }
+]
