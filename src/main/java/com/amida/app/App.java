@@ -24,6 +24,7 @@ class JoltSample {
 
         String XMLString = "";
         String JSONString = "";
+        String JSONOutput = "";
 
         // Read in the XML File.
         File file = new File("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.xml");
@@ -49,17 +50,19 @@ class JoltSample {
         //  JsonUtils.classpathToList : assumes you put the test artifacts in your class path
         //  JsonUtils.filepathToList : you can use an absolute path to specify the files
 
-        List chainrSpecJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/spec.json" );
+        List chainrSpecJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/spec.json" );
+        
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
 
-        Object inputJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample.json" );
+        // Object inputJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample.json" );
 
-        Object transformedOutput = chainr.transform( inputJSON );
-        System.out.println( JsonUtils.toJsonString( transformedOutput ) );
+        Object transformedOutput = chainr.transform( JSONString );
+        JSONOutput = JsonUtils.toJsonString( transformedOutput );
+        System.out.println(JSONOutput);
 
         // Output JSON data.
         FileOutputStream outputStream = new FileOutputStream("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json");
-        byte[] strToBytes = JSONString.getBytes();
+        byte[] strToBytes = JSONOutput.getBytes();
         outputStream.write(strToBytes);
         outputStream.close();
 
