@@ -22,6 +22,8 @@ class JoltSample {
    
     public static void main(String[] args) throws IOException {
 
+        // final int PRETTY_PRINT_INDENTATION = 4;
+
         String XMLString = "";
         String JSONString = "";
         String JSONOutput = "";
@@ -41,6 +43,7 @@ class JoltSample {
         try {
             JSONObject xmlJSONObj = XML.toJSONObject(XMLString);
             //System.out.println(xmlJSONObj);
+            //JSONString = xmlJSONObj.toString(PRETTY_PRINT_INDENTATION);
             JSONString = xmlJSONObj.toString();
         } catch (JSONException je) {
             System.out.print(je.toString());
@@ -52,20 +55,22 @@ class JoltSample {
 
         List chainrSpecJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/spec.json" );
         
+        //System.out.print(chainrSpecJSON);
+
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
 
-        // Object inputJSON = JsonUtils.filepathToList( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample.json" );
+        Object inputJSON = JsonUtils.filepathToObject( "/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json" );
+        //System.out.print((JSONString));
 
-        Object transformedOutput = chainr.transform( JSONString );
+        Object transformedOutput = chainr.transform( inputJSON );
         JSONOutput = JsonUtils.toJsonString( transformedOutput );
         System.out.println(JSONOutput);
 
         // Output JSON data.
-        FileOutputStream outputStream = new FileOutputStream("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json");
+        FileOutputStream outputStream = new FileOutputStream("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/transformed.json");
         byte[] strToBytes = JSONOutput.getBytes();
         outputStream.write(strToBytes);
         outputStream.close();
-
 
     }
 }
