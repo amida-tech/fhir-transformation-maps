@@ -24,3 +24,9 @@ hs_err_pid*
 
 # remove data
 data/sample
+
+# ide stuff
+.classpath
+.settings/*
+.vscode/*
+.project
