@@ -8,9 +8,11 @@ package com.amida.app;
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
 
-//import org.json.JSONObject;
-//import org.json.XML;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.File;
 
 import java.io.IOException;
@@ -20,21 +22,28 @@ class JoltSample {
    
     public static void main(String[] args) throws IOException {
 
-        // Read in the XML File.
+        String XMLString = "";
+        String JSONString = "";
 
-        String fileContents = "";
+        // Read in the XML File.
         File file = new File("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.xml");
         FileInputStream fis = new FileInputStream(file);
             int data = fis.read();
             while(data != -1) {
                 // System.out.print(data);
-               fileContents = fileContents + (char)data;
+                XMLString = XMLString + (char)data;
                data=fis.read();
             }
             fis.close();
 
-        System.out.println(fileContents);
-
+        // Convert XML to JSON.
+        try {
+            JSONObject xmlJSONObj = XML.toJSONObject(XMLString);
+            //System.out.println(xmlJSONObj);
+            JSONString = xmlJSONObj.toString();
+        } catch (JSONException je) {
+            System.out.print(je.toString());
+        }
 
         // How to access the test artifacts, i.e. JSON files
         //  JsonUtils.classpathToList : assumes you put the test artifacts in your class path
@@ -47,5 +56,13 @@ class JoltSample {
 
         Object transformedOutput = chainr.transform( inputJSON );
         System.out.println( JsonUtils.toJsonString( transformedOutput ) );
+
+        // Output JSON data.
+        FileOutputStream outputStream = new FileOutputStream("/Users/matthew/Workspace/fhir-transformation-maps/data/sample/HannahBanana_EpicCCD.json");
+        byte[] strToBytes = JSONString.getBytes();
+        outputStream.write(strToBytes);
+        outputStream.close();
+
+
     }
 }
